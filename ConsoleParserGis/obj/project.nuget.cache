@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "BAtK4/ASY04VUWGL49pXyR3UwfochbbwP1W4czHRRs2V0hxPoH9kDOXF906Nf9+cI+LGnw4z4lAR5lTXQbXaSA==",
+  "success": true,
+  "projectFilePath": "F:\\ParserTestApp\\ConsoleParserGis\\ConsoleParserGis.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\gleb\\.nuget\\packages\\anglesharp\\0.14.0\\anglesharp.0.14.0.nupkg.sha512",
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",
+    "C:\\Users\\gleb\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.0\\system.runtime.compilerservices.unsafe.4.5.0.nupkg.sha512",
+    "C:\\Users\\gleb\\.nuget\\packages\\system.text.encoding.codepages\\4.5.0\\system.text.encoding.codepages.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
