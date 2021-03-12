@@ -7,6 +7,6 @@ namespace ConsoleParserGis
 {
     interface IWorker
     {
-        int TasksArraySize { get; }     
+        ParserSettings settings { get; }
     }
 }

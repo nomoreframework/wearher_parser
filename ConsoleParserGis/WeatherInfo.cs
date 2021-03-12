@@ -20,23 +20,23 @@ namespace ConsoleParserGis
             ResourceLink = resourceLink;
             weatherItems = new List<WeatherItem>();
             weatherItems.AddRange(wetheritems);
-            op = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin,
-                                                     UnicodeRanges.Cyrillic,
-                                                     UnicodeRanges.Specials,
-                                                     UnicodeRanges.NumberForms),
-                WriteIndented = true
-            };
+            //op = new JsonSerializerOptions
+            //{
+            //    Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin,
+            //                                         UnicodeRanges.Cyrillic,
+            //                                         UnicodeRanges.Specials,
+            //                                         UnicodeRanges.NumberForms),
+            //    WriteIndented = true
+            //};
 
         }
 
-        internal string GetWeatherAsJson(WeatherInfo info, JsonSerializerOptions options = null)
-        {
-            if (options == null) options = op;
-            string weather_json = JsonSerializer.Serialize<WeatherInfo>(info, options);
-            return weather_json;
-        }
+        //internal string GetWeatherAsJson(WeatherInfo info, JsonSerializerOptions options = null)
+        //{
+        //    if (options == null) options = op;
+        //    string weather_json = JsonSerializer.Serialize<WeatherInfo>(info, options);
+        //    return weather_json;
+        //}
 
     }
 }

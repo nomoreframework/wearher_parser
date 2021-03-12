@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace ConsoleParserGis
 {
@@ -12,34 +9,49 @@ namespace ConsoleParserGis
         public Task[] ParserTasks;
 
         public int TasksArraySize { get; }
+        public ParserSettings settings { get; }
+        public Dictionary<string, string> refs_dictionary;
+        List<WeatherInfo> weatherInfos;
 
-        internal void ParseParallel(Dictionary<string, string> dict, ParserSettings obj)
+        internal Worker(string URL, string suffix)
+        {
+            settings = new ParserSettings(URL, suffix, "noscript", "href", "data-name", "a");
+            weatherInfos = new List<WeatherInfo>();
+        }
+
+        internal async Task<List<WeatherInfo>>  ParseParallel()
         {
             int index = 0;
-            ParserTasks = new Task[dict.Count];
-            foreach (var e in dict)
+            refs_dictionary = await settings.GetCitiesRefrs();
+            ParserTasks = new Task[refs_dictionary.Count];
+            foreach (var e in refs_dictionary)
             {
-                  Task t = new Task(() => get_data(e.Key, e.Value, obj));
+                HttpResponseMessage mes = await settings.client.GetAsync(e.Value);
+                string result = await mes.Content.ReadAsStringAsync();
+                Task t = new Task(() => get_data(e.Key, e.Value, settings, result, mes));
                 ParserTasks[index] = t;
                 index++;
             }
             foreach (var t in ParserTasks) t.Start();
             Task.WaitAll(ParserTasks);
+            return weatherInfos;
         }
-        internal void ParseSynchronus(Dictionary<string, string> dict, ParserSettings obj)
+        internal async Task<List<WeatherInfo>> ParseSynchronus()
         {
-            foreach (var e in dict)
+            refs_dictionary = await settings.GetCitiesRefrs();
+            foreach (var e in refs_dictionary)
             {
-                get_data(e.Key, e.Value, obj);
+                HttpResponseMessage mes = await settings.client.GetAsync(e.Value);
+                string result = await mes.Content.ReadAsStringAsync();
+                get_data(e.Key, e.Value, settings, result, mes);
             }
+            return weatherInfos;
         }
-        async void get_data(string key, string value, ParserSettings obj)
+         void get_data(string key, string value, ParserSettings obj, string result, HttpResponseMessage mes)
         {
-            HttpResponseMessage mes = await obj.client.GetAsync(value);
-            string result = await mes.Content.ReadAsStringAsync();
             var weather = new WeatherParser(result);
             var w = new WeatherInfo(key, value, weather.GetWeathers());
-            w.GetWeatherAsJson(w);
+            weatherInfos.Add(w);
         }
     }
 }

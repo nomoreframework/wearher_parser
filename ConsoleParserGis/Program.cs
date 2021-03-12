@@ -1,71 +1,99 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using AngleSharp.Html.Dom;
-using AngleSharp.Html.Parser;
-using AngleSharp.Dom;
 using System.Threading;
-using System.Text.Json;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
-using System.Diagnostics;
+using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace ConsoleParserGis
 {
-   public class Program
+    public class MongoItem
+    {
+        public ObjectId Id { get; set; }
+        public List<WeatherInfo> weatherInfos { get; set; }
+    }
+    public class Program
     {
         const string URL = "https://www.gismeteo.ru";
         const string suffix = "10-days";
-        static Dictionary<string, string> dict;
-        static ParserSettings obj;
+        static List<WeatherInfo> weathers;
+        const string connectionString = "mongodb://localhost";
+        static MongoItem item;
+
         static void Main(string[] args)
         {
-            { 
+            item = new MongoItem();
+            while (true)
+            {
+                Console.WriteLine("Parser was started at: ");
+                PrintBl(DateTime.Now.ToShortTimeString().ToString());
+                try
+                {
+                    var task = Task.Factory.StartNew(() => get_data_parallel(), TaskCreationOptions.LongRunning);
+                    Console.WriteLine("Working...");
+                    Task.WaitAll(task);
+                    foreach (var el in weathers) el.DateOfLastUpdate = DateTime.Now.ToLocalTime().ToString();
+                    item.weatherInfos = weathers;
+                }
+                catch (AggregateException ex)
+                {
+                    if (ex != null) PrintErr(ex.StackTrace);
+                    continue;
+                }
+                catch (Exception ex)
+                {           
+                    PrintErr(ex.StackTrace);
+                    continue;
+                }
+                Print("Parser completed successfully! ");
+                PrintBl(DateTime.Now.ToShortTimeString().ToString());
+                Console.WriteLine("Startt saving into the database: ");
+                PrintBl(DateTime.Now.ToShortTimeString().ToString());
+         
+                    SaveWeatherDoc();
+             
+                    Print("Added into database was completed successfully! ");
 
+                Console.WriteLine("sleep state..." + "\n");
+                PrintBl("For exit - pres 'Ctrl + C'");
+                Thread.Sleep(new Random().Next(300 * 1000, 600 * 1000));
             }
+
         }
 
-       async static Task<string> get_data_synch()
+        static void get_data_synch()
         {
-            Stopwatch s = new Stopwatch();
-            s.Start();
-            obj = new ParserSettings(URL, suffix, "noscript", "href", "data-name", "a");
+            weathers = new Worker(URL, suffix).ParseSynchronus().Result;
+        }
+        static void get_data_parallel()
+        {
+            weathers = new Worker(URL, suffix).ParseParallel().Result;
+        }
+        private static void SaveWeatherDoc()
+        {
+            var client = new MongoClient(connectionString);
+            var database = client.GetDatabase("test");
+            var collection = database.GetCollection<MongoItem>("weatherscoll");
 
-            dict = await obj.GetCitiesRefrs();
-            new Worker().ParseSynchronus(dict, obj);
-            s.Stop();
-            Print("synch time = " + s.ElapsedMilliseconds.ToString());
-            return "";
+            collection.InsertOne(item);
         }
-         async static Task<string> get_data_parallel()
-        {
-            obj = new ParserSettings(URL, suffix, "noscript", "href", "data-name", "a");
-            dict = await obj.GetCitiesRefrs();
-            new Worker().ParseParallel(dict, obj);
-            return "";
-        }
-      internal  static void Print(string message)
+        internal static void Print(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(message + "\n" + "-----------------------------------------" + "\n");
+            Console.WriteLine(message);
             Console.ResetColor();
         }
-       internal static void PrintErr(string message)
+        internal static void PrintErr(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message + "\n" + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + "\n");
+            Console.WriteLine(message);
             Console.ResetColor();
         }
-    }
-    internal class Storage
-    {
-        internal ParserSettings settings { get; }
-        internal string key { get; }
-        internal string value { get; }
+        internal static void PrintBl(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write(message + "\n");
+            Console.ResetColor();
+        }
     }
 }
