@@ -1,18 +1,18 @@
-﻿using System;
+﻿using MongoDB.Bson;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
+using System;
+
 
 namespace ConsoleParserGis
 {
     public class WeatherInfo
     {
-        public string CityName { get; }
-        public string ResourceLink { get;}
-        public List<WeatherItem> weatherItems { get; }
-        JsonSerializerOptions op;
+        public ObjectId Id { get; set; }
+        public string CityName { get; set; }
+        public string ResourceLink { get; set; }
+        public List<WeatherItem> weatherItems { get; set; }
+        public string DateOfLastUpdate { get; set; }
+      //  JsonSerializerOptions op;
 
         internal WeatherInfo(string city_name, string resourceLink, List<WeatherItem> wetheritems)
         {

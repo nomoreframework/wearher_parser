@@ -16,7 +16,7 @@
       },
       "AngleSharp/0.14.0": {
         "dependencies": {
-          "System.Text.Encoding.CodePages": "4.5.0"
+          "System.Text.Encoding.CodePages": "4.5.1"
         },
         "runtime": {
           "lib/netstandard2.0/AngleSharp.dll": {

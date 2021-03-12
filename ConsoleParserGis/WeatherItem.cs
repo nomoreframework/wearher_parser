@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MongoDB.Bson;
 
 namespace ConsoleParserGis
 {
     public class WeatherItem
     {
+        public ObjectId Id { get; set; }
         public string Day { get; set; }
         public string Temperature { get; set; }
         public string WindSpeed { get; set; }
