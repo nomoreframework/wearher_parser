@@ -37,7 +37,7 @@ namespace ConsoleParserGis
                 }
                 catch (AggregateException ex)
                 {
-                    if (ex != null) PrintErr(ex.StackTrace);
+                    PrintErr(ex.StackTrace);
                     continue;
                 }
                 catch (Exception ex)
