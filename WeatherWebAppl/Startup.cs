@@ -24,6 +24,7 @@ namespace WeatherWebAppl
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddTransient<WetherContext>();
             services.AddControllers();
         }
@@ -35,6 +36,7 @@ namespace WeatherWebAppl
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(builder => builder.WithOrigins("http://localhost:8081").WithMethods("GET").AllowAnyHeader());
 
             app.UseRouting();
 
