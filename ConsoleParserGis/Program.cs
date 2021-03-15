@@ -22,7 +22,6 @@ namespace ConsoleParserGis
 
         static void Main(string[] args)
         {
-            item = new MongoItem();
             while (true)
             {
                 Console.WriteLine("Parser was started at: ");
@@ -33,6 +32,7 @@ namespace ConsoleParserGis
                     Console.WriteLine("Working...");
                     Task.WaitAll(task);
                     foreach (var el in weathers) el.DateOfLastUpdate = DateTime.Now.ToLocalTime().ToString();
+                    item = new MongoItem();
                     item.weatherInfos = weathers;
                 }
                 catch (AggregateException ex)
