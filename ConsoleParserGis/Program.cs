@@ -49,8 +49,15 @@ namespace ConsoleParserGis
                 PrintBl(DateTime.Now.ToShortTimeString().ToString());
                 Console.WriteLine("Startt saving into the database: ");
                 PrintBl(DateTime.Now.ToShortTimeString().ToString());
-         
+                try
+                {
                     SaveWeatherDoc();
+                }
+                catch(Exception ex)
+                {
+                    PrintErr(ex.Message + DateTime.Now.ToShortTimeString().ToString());
+                    continue;
+                }
              
                     Print("Added into database was completed successfully! ");
 
