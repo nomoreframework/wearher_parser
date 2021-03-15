@@ -22,6 +22,7 @@ namespace ConsoleParserGis
 
         static void Main(string[] args)
         {
+            item = new MongoItem();
             while (true)
             {
                 Console.WriteLine("Parser was started at: ");
@@ -32,7 +33,6 @@ namespace ConsoleParserGis
                     Console.WriteLine("Working...");
                     Task.WaitAll(task);
                     foreach (var el in weathers) el.DateOfLastUpdate = DateTime.Now.ToLocalTime().ToString();
-                    item = new MongoItem();
                     item.weatherInfos = weathers;
                 }
                 catch (AggregateException ex)
@@ -49,15 +49,8 @@ namespace ConsoleParserGis
                 PrintBl(DateTime.Now.ToShortTimeString().ToString());
                 Console.WriteLine("Startt saving into the database: ");
                 PrintBl(DateTime.Now.ToShortTimeString().ToString());
-                try 
-                {
+         
                     SaveWeatherDoc();
-                }
-                 catch(Exception ex)
-                {
-                    PrintErr(ex.Message + DateTime.Now.ToShortTimeString().ToString());
-                    continue;
-                }
              
                     Print("Added into database was completed successfully! ");
 
