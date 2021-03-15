@@ -63,7 +63,7 @@ namespace ConsoleParserGis
 
                 Console.WriteLine("sleep state..." + "\n");
                 PrintBl("For exit - pres 'Ctrl + C'");
-                Thread.Sleep(new Random().Next(300 * 1000, 600 * 1000));
+                Thread.Sleep(new Random().Next(300 * 1000, 400 * 1000));
             }
 
         }
