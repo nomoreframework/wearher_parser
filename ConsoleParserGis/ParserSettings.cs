@@ -58,9 +58,9 @@ namespace ConsoleParserGis
         {
             return new List<string>();
         }
-        internal virtual List<string> GetTemperature(string html_content)
+        internal virtual List<temperature> GetTemperature(string html_content)
         {
-            return new List<string>();
+            return new List<temperature>();
         }
         internal virtual List<string> GetWindSpeed(string html_content)
         {
